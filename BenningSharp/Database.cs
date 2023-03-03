@@ -31,10 +31,16 @@ namespace BenningSharp
             //    Console.WriteLine(customer);
 
             Console.WriteLine();
-            Console.WriteLine(nameof(ReadDevices));
-            var Devices = await ReadDevices();
-            foreach (var Device in Devices)
-                Console.WriteLine(Device);
+            Console.WriteLine(nameof(ReadDepartments));
+            var Departments = await ReadDepartments();
+            foreach (var Department in Departments)
+                Console.WriteLine(Department);
+
+            //Console.WriteLine();
+            //Console.WriteLine(nameof(ReadDevices));
+            //var Devices = await ReadDevices();
+            //foreach (var Device in Devices)
+            //    Console.WriteLine(Device);
 
             //Console.WriteLine();
             //Console.WriteLine(nameof(ReadInspections));
@@ -131,6 +137,20 @@ namespace BenningSharp
             dr.Close();
             return customers.ToArray();
         }
+        private async Task<Department[]> ReadDepartments()
+        {
+            SQLiteDataReader sqlite_datareader;
+            SQLiteCommand sqlite_cmd;
+            sqlite_cmd = sqlite_conn.CreateCommand();
+            sqlite_cmd.CommandText = "SELECT * FROM Departments";
+            var dr = sqlite_cmd.ExecuteReader();
+
+            List<Department> departments = new List<Department>();
+            while (dr.Read())
+                departments.Add(new Department(dr));
+            dr.Close();
+            return departments.ToArray();
+        }
         private async Task<Device[]> ReadDevices()
         {
             SQLiteDataReader sqlite_datareader;
@@ -139,11 +159,11 @@ namespace BenningSharp
             sqlite_cmd.CommandText = "SELECT * FROM Geraete";
             var dr = sqlite_cmd.ExecuteReader();
 
-            List<Device> customers = new List<Device>();
+            List<Device> devices = new List<Device>();
             while (dr.Read())
-                customers.Add(new Device(dr));
+                devices.Add(new Device(dr));
             dr.Close();
-            return customers.ToArray();
+            return devices.ToArray();
         }
         private async Task<Inspection[]> ReadInspections()
         {
