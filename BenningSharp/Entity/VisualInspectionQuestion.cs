@@ -2,7 +2,7 @@
 
 namespace BenningSharp.Entity
 {
-    public struct VisualInspectionQuestion
+    public readonly struct VisualInspectionQuestion
     {
         public readonly long ID = -1;
         public readonly string? Question = null;
@@ -16,7 +16,7 @@ namespace BenningSharp.Entity
             this.ViewLevel = viewLevel;
             this.IsDeleted = isDeleted;
         }
-        internal VisualInspectionQuestion(SQLiteDataReader dr)
+        public VisualInspectionQuestion(SQLiteDataReader dr)
         {
             for (int i = 0; i < dr.FieldCount; i++)
             {

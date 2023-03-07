@@ -2,7 +2,7 @@
 
 namespace BenningSharp.Entity
 {
-    public struct Customer
+    public readonly struct Customer
     {
         public readonly long ID = -1;
         public readonly string? Name = null;
@@ -20,7 +20,7 @@ namespace BenningSharp.Entity
         public readonly string? ContactPersonPhonenumber = null;
         public readonly string? ContactPersonEMail = null;
         public readonly DateTime? ModificationDate = null;
-                
+
         public Customer(
             in long id,
             in string? name,

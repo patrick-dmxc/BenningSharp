@@ -1,95 +1,58 @@
-﻿using BenningSharp.Entity;
-using System.Data;
+﻿using System.Collections.ObjectModel;
 using System.Data.SQLite;
 
 namespace BenningSharp
 {
     public class Database
     {
-        private const string PATH = "C:\\Users\\Patrick\\Desktop\\LAV2022.db";
+        public bool IsInitialized { get; private set; }
+        public readonly string? Path = null;
         private SQLiteConnection? sqlite_conn;
-        public Database()
+        private IEnumerable<Entity.Limit>? limitEntities;
+        private IEnumerable<Entity.Customer>? customeEntities;
+        private IEnumerable<Entity.Department>? departmentEntities;
+        private IEnumerable<Entity.Device>? deviceEntities;
+        private IEnumerable<Entity.Inspection>? inspectionEntities;
+        private IEnumerable<Entity.Manufacturer>? manufacturerEntities;
+        private IEnumerable<Entity.InspectionResult>? inspectionResultEntities;
+        private IEnumerable<Entity.InspectionResultSequence>? inspectionResultSequenceEntities;
+        private IEnumerable<Entity.InspectionResultSequenceProcedure>? inspectionResultSequenceProcedureEntities;
+        private IEnumerable<Entity.InspectionResultSequenceProcedureValue>? inspectionResultSequenceProcedureValueEntities;
+        private IEnumerable<Entity.VisualInspectionQuestion>? visualInspectionQuestionEntities;
+        private IEnumerable<Entity.VisualInspectionAnswer>? visualInspectionAnswerEntities;
+
+
+        private List<Objects.Device> devices = new List<Objects.Device>();
+        private List<Objects.InspectionResult> inspectionResults = new List<Objects.InspectionResult>();
+        public IReadOnlyCollection<Objects.Device> Devices
         {
+            get
+            {
+                return devices.AsReadOnly();
+            }
+        }
+        public IReadOnlyCollection<Objects.InspectionResult> InspectionResults
+        {
+            get
+            {
+                return inspectionResults.AsReadOnly();
+            }
+        }
+
+        public Database(string path)
+        {
+            this.Path = path;
             _ = this.initialize();
         }
         private async Task initialize()
         {
-            string path = PATH;
-            sqlite_conn = await CreateConnection(path);
+            if (this.Path != null)
+                sqlite_conn = await CreateConnection(this.Path);
 
-            //Console.WriteLine();
-            //Console.WriteLine(nameof(ReadLimits));
-            //var Limits = await ReadLimits();
-            //foreach (var Limit in Limits)
-            //    foreach (var kv in Limit.Data)
-            //        Console.WriteLine(kv.Value);
+            await LoadDatabase();
+            GenerateObjects();
 
-            //Console.WriteLine();
-            //Console.WriteLine(nameof(ReadCustomers));
-            //var customers = await ReadCustomers();
-            //foreach (var customer in customers)
-            //    Console.WriteLine(customer);
-
-            Console.WriteLine();
-            Console.WriteLine(nameof(ReadDepartments));
-            var Departments = await ReadDepartments();
-            foreach (var Department in Departments)
-                Console.WriteLine(Department);
-
-            //Console.WriteLine();
-            //Console.WriteLine(nameof(ReadDevices));
-            //var Devices = await ReadDevices();
-            //foreach (var Device in Devices)
-            //    Console.WriteLine(Device);
-
-            //Console.WriteLine();
-            //Console.WriteLine(nameof(ReadInspections));
-            //var inspections = await ReadInspections();
-            //foreach (var inspection in inspections)
-            //    Console.WriteLine(inspection);
-
-            //Console.WriteLine();
-            //Console.WriteLine(nameof(ReadInspectionResults));
-            //var InspectionResults = await ReadInspectionResults();
-            //foreach (var InspectionResult in InspectionResults)
-            //    foreach (var kv in InspectionResult.Data.Where(d=>d.Value.InspectionMiddleKey== EInspectionMiddle.Conductor))
-            //        Console.WriteLine(kv.Value);
-
-            //Console.WriteLine();
-            //Console.WriteLine(nameof(ReadInspectionResultSequences));
-            //var InspectionResultSequences = await ReadInspectionResultSequences();
-            //foreach (var InspectionResultSequence in InspectionResultSequences)
-            //    Console.WriteLine(InspectionResultSequence);
-
-            //Console.WriteLine();
-            //Console.WriteLine(nameof(ReadInspectionResultSequenceProcedures));
-            //var InspectionResultSequenceProcedures = await ReadInspectionResultSequenceProcedures();
-            //foreach (var InspectionResultSequenceProcedure in InspectionResultSequenceProcedures)
-            //    Console.WriteLine(InspectionResultSequenceProcedure);
-
-            //Console.WriteLine();
-            //Console.WriteLine(nameof(ReadInspectionResultSequenceProcedureValues));
-            //var InspectionResultSequenceProcedurevalues = await ReadInspectionResultSequenceProcedureValues();
-            //foreach (var InspectionResultSequenceProcedureValue in InspectionResultSequenceProcedurevalues)
-            //    Console.WriteLine(InspectionResultSequenceProcedureValue);
-
-            //Console.WriteLine();
-            //Console.WriteLine(nameof(ReadManufacturers));
-            //var manufacturers = await ReadManufacturers();
-            //foreach (var manufacturer in manufacturers)
-            //    Console.WriteLine(manufacturer);
-
-            //Console.WriteLine();
-            //Console.WriteLine(nameof(ReadVisualInspectionQuestions));
-            //var visualInspectionQuestions = await ReadVisualInspectionQuestions();
-            //foreach (var visualInspectionQuestion in visualInspectionQuestions)
-            //    Console.WriteLine(visualInspectionQuestion);
-
-            //Console.WriteLine();
-            //Console.WriteLine(nameof(ReadVisualInspectionAnswers));
-            //var visualInspectionAnswers = await ReadVisualInspectionAnswers();
-            //foreach (var visualInspectionAnswer in visualInspectionAnswers)
-            //    Console.WriteLine(visualInspectionAnswer);
+            this.IsInitialized = true;
         }
         private async Task<SQLiteConnection?> CreateConnection(string path)
         {
@@ -109,181 +72,63 @@ namespace BenningSharp
             return sqlite_conn;
         }
 
-        private async Task<Limit[]> ReadLimits()
+        private async Task<IEnumerable<T>> ReadDataAsync<T>(string command)
         {
-            SQLiteDataReader sqlite_datareader;
+            if (sqlite_conn == null)
+                throw new NullReferenceException();
+
             SQLiteCommand sqlite_cmd;
             sqlite_cmd = sqlite_conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM Grenzwerte";
-            var dr = sqlite_cmd.ExecuteReader();
+            sqlite_cmd.CommandText = command;
+            var dr = await sqlite_cmd.ExecuteReaderAsync();
 
-            List<Limit> limits = new List<Limit>();
-            while (dr.Read())
-                limits.Add(new Limit(dr));
+            List<T> list = new List<T>();
+            while (await dr.ReadAsync())
+            {
+                try
+                {
+                    T data = (T)Activator.CreateInstance(typeof(T), dr)!;
+                    list.Add(data);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
             dr.Close();
-            return limits.ToArray();
+            return list;
         }
-        private async Task<Customer[]> ReadCustomers()
-        {
-            SQLiteDataReader sqlite_datareader;
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = sqlite_conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM Kunden";
-            var dr = sqlite_cmd.ExecuteReader();
 
-            List<Customer> customers = new List<Customer>();
-            while (dr.Read())
-                customers.Add(new Customer(dr));
-            dr.Close();
-            return customers.ToArray();
+        private async Task LoadDatabase()
+        {
+            limitEntities = await ReadDataAsync<Entity.Limit>("SELECT * FROM Grenzwerte");
+            customeEntities = await ReadDataAsync<Entity.Customer>("SELECT * FROM Kunden");
+            departmentEntities = await ReadDataAsync<Entity.Department>("SELECT * FROM Departments");
+            deviceEntities = await ReadDataAsync<Entity.Device>("SELECT * FROM Geraete");
+            inspectionEntities = await ReadDataAsync<Entity.Inspection>("SELECT * FROM Pruefung");
+            manufacturerEntities = await ReadDataAsync<Entity.Manufacturer>("SELECT * FROM Manufacturers");
+            inspectionResultEntities = await ReadDataAsync<Entity.InspectionResult>("SELECT * FROM Ergebnisse");
+            inspectionResultSequenceEntities = await ReadDataAsync<Entity.InspectionResultSequence>("SELECT * FROM Sequences");
+            inspectionResultSequenceProcedureEntities = await ReadDataAsync<Entity.InspectionResultSequenceProcedure>("SELECT * FROM SqProcedures");
+            inspectionResultSequenceProcedureValueEntities = await ReadDataAsync<Entity.InspectionResultSequenceProcedureValue>("SELECT * FROM SqProcValues");
+            visualInspectionQuestionEntities = await ReadDataAsync<Entity.VisualInspectionQuestion>("SELECT * FROM ViewQuestions");
+            visualInspectionAnswerEntities = await ReadDataAsync<Entity.VisualInspectionAnswer>("SELECT * FROM TestResult2Admin2Answers");
         }
-        private async Task<Department[]> ReadDepartments()
+        private void GenerateObjects()
         {
-            SQLiteDataReader sqlite_datareader;
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = sqlite_conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM Departments";
-            var dr = sqlite_cmd.ExecuteReader();
+            if (inspectionResultEntities == null)
+                throw new NullReferenceException();
+            if (deviceEntities == null)
+                throw new NullReferenceException();
 
-            List<Department> departments = new List<Department>();
-            while (dr.Read())
-                departments.Add(new Department(dr));
-            dr.Close();
-            return departments.ToArray();
-        }
-        private async Task<Device[]> ReadDevices()
-        {
-            SQLiteDataReader sqlite_datareader;
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = sqlite_conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM Geraete";
-            var dr = sqlite_cmd.ExecuteReader();
+            foreach (var ir in inspectionResultEntities)
+                inspectionResults.Add(new Objects.InspectionResult(this, ir));
 
-            List<Device> devices = new List<Device>();
-            while (dr.Read())
-                devices.Add(new Device(dr));
-            dr.Close();
-            return devices.ToArray();
-        }
-        private async Task<Inspection[]> ReadInspections()
-        {
-            SQLiteDataReader sqlite_datareader;
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = sqlite_conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM Pruefung";
-            var dr = sqlite_cmd.ExecuteReader();
+            foreach (var d in deviceEntities)
+                devices.Add(new Objects.Device(this, d));
 
-            List<Inspection> inspections = new List<Inspection>();
-            while (dr.Read())
-                inspections.Add(new Inspection(dr));
-            dr.Close();
-            return inspections.ToArray();
-        }
-        private async Task<Manufacturer[]> ReadManufacturers()
-        {
-            SQLiteDataReader sqlite_datareader;
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = sqlite_conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM Manufacturers";
-            var dr = sqlite_cmd.ExecuteReader();
-
-            List<Manufacturer> manufacturers = new List<Manufacturer>();
-            while (dr.Read())
-                manufacturers.Add(new Manufacturer(dr));
-            dr.Close();
-            return manufacturers.ToArray();
-        }
-        private async Task<InspectionResult[]> ReadInspectionResults()
-        {
-            SQLiteDataReader sqlite_datareader;
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = sqlite_conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM Ergebnisse";
-            var dr = sqlite_cmd.ExecuteReader();
-
-            List<InspectionResult> InspectionResults = new List<InspectionResult>();
-            while (dr.Read())
-                InspectionResults.Add(new InspectionResult(dr));
-            dr.Close();
-            return InspectionResults.ToArray();
-        }
-        private async Task<InspectionResultSequence[]> ReadInspectionResultSequences()
-        {
-            SQLiteDataReader sqlite_datareader;
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = sqlite_conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM Sequences";
-            var dr = sqlite_cmd.ExecuteReader();
-
-            List<InspectionResultSequence> InspectionResultSequences = new List<InspectionResultSequence>();
-            while (dr.Read())
-                InspectionResultSequences.Add(new InspectionResultSequence(dr));
-            dr.Close();
-            return InspectionResultSequences.ToArray();
-        }
-        private async Task<InspectionResultSequenceProcedure[]> ReadInspectionResultSequenceProcedures()
-        {
-            SQLiteDataReader sqlite_datareader;
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = sqlite_conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM SqProcedures";
-            var dr = sqlite_cmd.ExecuteReader();
-
-            List<InspectionResultSequenceProcedure> InspectionResultSequenceProcedures = new List<InspectionResultSequenceProcedure>();
-            while (dr.Read())
-                InspectionResultSequenceProcedures.Add(new InspectionResultSequenceProcedure(dr));
-            dr.Close();
-            return InspectionResultSequenceProcedures.ToArray();
-        }
-        private async Task<InspectionResultSequenceProcedureValue[]> ReadInspectionResultSequenceProcedureValues()
-        {
-            SQLiteDataReader sqlite_datareader;
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = sqlite_conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM SqProcValues";
-            var dr = sqlite_cmd.ExecuteReader();
-
-            List<InspectionResultSequenceProcedureValue> InspectionResultSequenceProcedureValues = new List<InspectionResultSequenceProcedureValue>();
-            while (dr.Read())
-                InspectionResultSequenceProcedureValues.Add(new InspectionResultSequenceProcedureValue(dr));
-            dr.Close();
-            return InspectionResultSequenceProcedureValues.ToArray();
-        }
-        private async Task<VisualInspectionQuestion[]> ReadVisualInspectionQuestions()
-        {
-            SQLiteDataReader sqlite_datareader;
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = sqlite_conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM ViewQuestions";
-            var dr = sqlite_cmd.ExecuteReader();
-
-            List<VisualInspectionQuestion> visualInspectionQuestions = new List<VisualInspectionQuestion>();
-            while (dr.Read())
-                visualInspectionQuestions.Add(new VisualInspectionQuestion(dr));
-            dr.Close();
-            return visualInspectionQuestions.ToArray();
-        }
-        private async Task<VisualInspectionAnswer[]> ReadVisualInspectionAnswers()
-        {
-            SQLiteDataReader sqlite_datareader;
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = sqlite_conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM TestResult2Admin2Answers";
-            var dr = sqlite_cmd.ExecuteReader();
-
-            List<VisualInspectionAnswer> visualInspectionAnswers = new List<VisualInspectionAnswer>();
-            while (dr.Read())
-                visualInspectionAnswers.Add(new VisualInspectionAnswer(dr));
-            dr.Close();
-            sqlite_cmd = sqlite_conn.CreateCommand();
-
-            sqlite_cmd.CommandText = "SELECT * FROM TestResult2Customer2Answers";
-            dr = sqlite_cmd.ExecuteReader();
-
-            while (dr.Read())
-                visualInspectionAnswers.Add(new VisualInspectionAnswer(dr));
-            dr.Close();
-            return visualInspectionAnswers.ToArray();
+            inspectionResults.ForEach(ir => ir.initialize());
+            devices.ForEach(d => d.initialize());
         }
     }
 }

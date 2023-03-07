@@ -2,7 +2,7 @@
 
 namespace BenningSharp.Entity
 {
-    public struct Inspection
+    public readonly struct Inspection
     {
         public readonly long ID = -1;
         public readonly string? Name = null;
@@ -13,7 +13,7 @@ namespace BenningSharp.Entity
         public readonly long? LimitsID = null;
         public readonly bool? Individual = null;
 
-        internal Inspection(SQLiteDataReader dr)
+        public Inspection(SQLiteDataReader dr)
         {
             for (int i = 0; i < dr.FieldCount; i++)
             {

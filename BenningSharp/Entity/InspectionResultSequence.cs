@@ -2,7 +2,7 @@
 
 namespace BenningSharp.Entity
 {
-    public struct InspectionResultSequence
+    public readonly struct InspectionResultSequence
     {
         public readonly long ID = -1;
         public readonly int? DeviceID = null;
@@ -12,8 +12,8 @@ namespace BenningSharp.Entity
         public readonly string? Remark = null;
         public readonly bool? Passed = null;
         public readonly bool? PassedVisualInspection = null;
-    
-        internal InspectionResultSequence(SQLiteDataReader dr)
+
+        public InspectionResultSequence(SQLiteDataReader dr)
         {
             for (int i = 0; i < dr.FieldCount; i++)
             {

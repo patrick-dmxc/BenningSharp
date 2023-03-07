@@ -2,7 +2,7 @@
 
 namespace BenningSharp.Entity
 {
-    public struct Department
+    public readonly struct Department
     {
         public readonly long ID = -1;
         public readonly long? ParentID = null;
@@ -16,7 +16,7 @@ namespace BenningSharp.Entity
             this.CustomerID = customerID;
             this.Name = name;
         }
-        internal Department(SQLiteDataReader dr)
+        public Department(SQLiteDataReader dr)
         {
             for (int i = 0; i < dr.FieldCount; i++)
             {

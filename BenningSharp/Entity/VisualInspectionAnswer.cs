@@ -2,7 +2,7 @@
 
 namespace BenningSharp.Entity
 {
-    public struct VisualInspectionAnswer
+    public readonly struct VisualInspectionAnswer
     {
         public readonly long? InspectionResultID = null;
         public readonly long? QuestionID = null;
@@ -14,7 +14,7 @@ namespace BenningSharp.Entity
             this.QuestionID = questionID;
             this.AnswerID = answerId;
         }
-        internal VisualInspectionAnswer(SQLiteDataReader dr)
+        public VisualInspectionAnswer(SQLiteDataReader dr)
         {
             for (int i = 0; i < dr.FieldCount; i++)
             {

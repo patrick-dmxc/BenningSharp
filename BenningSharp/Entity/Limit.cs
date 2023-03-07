@@ -3,14 +3,14 @@ using System.Data.SQLite;
 
 namespace BenningSharp.Entity
 {
-    public struct Limit
+    public readonly struct Limit
     {
         public readonly long ID = -1;
         public readonly string? Hash = null;
 
         public readonly ReadOnlyDictionary<string, KeyValueData> Data = null;
 
-        internal Limit(SQLiteDataReader dr)
+        public Limit(SQLiteDataReader dr)
         {
             Dictionary<string, KeyValueData> data = new Dictionary<string, KeyValueData>();
             for (int i = 0; i < dr.FieldCount; i++)

@@ -2,7 +2,7 @@
 
 namespace BenningSharp.Entity
 {
-    public struct InspectionResultSequenceProcedure
+    public readonly struct InspectionResultSequenceProcedure
     {
         public readonly long ID = -1;
         public readonly long InspectionResultSequenceID = -1;
@@ -11,7 +11,7 @@ namespace BenningSharp.Entity
         public readonly long? BitMask2 = null;
         public readonly bool? Success = null;
 
-        internal InspectionResultSequenceProcedure(SQLiteDataReader dr)
+        public InspectionResultSequenceProcedure(SQLiteDataReader dr)
         {
             for (int i = 0; i < dr.FieldCount; i++)
             {

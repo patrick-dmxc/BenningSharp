@@ -2,12 +2,12 @@
 
 namespace BenningSharp.Entity
 {
-    public struct Device
+    public readonly struct Device
     {
         public readonly long Index = 0;
-        public readonly string? ID = null;
+        public readonly string ID = string.Empty;
         public readonly long CustomerIndex = 0;
-        public readonly string? Designation = null;
+        public readonly string Designation = string.Empty;
         public readonly string? Remark = null;
         public readonly string? Department = null;
         public readonly string? Type = null;
@@ -66,7 +66,7 @@ namespace BenningSharp.Entity
         public readonly long? LimitsID = null;
         public readonly bool? Individual = null;
 
-        internal Device(SQLiteDataReader dr)
+        public Device(SQLiteDataReader dr)
         {
             for (int i = 0; i < dr.FieldCount; i++)
             {

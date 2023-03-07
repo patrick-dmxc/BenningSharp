@@ -2,7 +2,7 @@
 
 namespace BenningSharp.Entity
 {
-    public struct KeyValueData
+    public readonly struct KeyValueData
     {
         public readonly string Key = null;
         public readonly object? Value = null;
@@ -12,7 +12,7 @@ namespace BenningSharp.Entity
         public readonly EInspectionMinor InspectionMinorKey = EInspectionMinor.UNKNOWN;
         public readonly EValueType ValueType = EValueType.UNKNOWN;
 
-        public KeyValueData(in string key, in object? value)
+        internal KeyValueData(in string key, in object? value)
         {
             this.Key = key;
             this.Value = value;

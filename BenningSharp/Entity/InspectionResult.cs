@@ -3,10 +3,10 @@ using System.Data.SQLite;
 
 namespace BenningSharp.Entity
 {
-    public struct InspectionResult
+    public readonly struct InspectionResult
     {
         public readonly long ID = -1;
-        public readonly long DeviceID = -1;
+        public readonly long DeviceIndex = -1;
         public readonly int LimitsID = -1;
         public readonly DateTime Date = default;
         public readonly long Inspection = -1;
@@ -31,7 +31,7 @@ namespace BenningSharp.Entity
 
         public readonly ReadOnlyDictionary<string, KeyValueData> Data = null;
 
-        internal InspectionResult(SQLiteDataReader dr)
+        public InspectionResult(SQLiteDataReader dr)
         {
             Dictionary<string, KeyValueData> data = new Dictionary<string, KeyValueData>();
             for (int i = 0; i < dr.FieldCount; i++)
@@ -48,7 +48,7 @@ namespace BenningSharp.Entity
                             ID = (long)value;
                             break;
                         case "Ergebnisse_Geraete_Index":
-                            DeviceID = (long)value;
+                            DeviceIndex = (long)value;
                             break;
                         case "Ergebnisse_Grenzwerte_Index":
                             LimitsID = (int)value;
@@ -146,7 +146,7 @@ namespace BenningSharp.Entity
         public override string ToString()
         {
 
-            return $"ID: {ID} Date: {Date} DeviceID: {DeviceID} LimitsID: {LimitsID} InspectionID: {Inspection} OrderNumber: {OrderNumber} MeasuringDevice: {MeasuringDevice} ExaminerName: {ExaminerName} ExaminingCompany: {ExaminingCompany} AdditionalInspections: {AdditionalInspections} Location: {Location} Remark: {Remark}";
+            return $"ID: {ID} Date: {Date} DeviceID: {DeviceIndex} LimitsID: {LimitsID} InspectionID: {Inspection} OrderNumber: {OrderNumber} MeasuringDevice: {MeasuringDevice} ExaminerName: {ExaminerName} ExaminingCompany: {ExaminingCompany} AdditionalInspections: {AdditionalInspections} Location: {Location} Remark: {Remark}";
         }
     }
 }

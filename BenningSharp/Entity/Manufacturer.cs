@@ -2,7 +2,7 @@
 
 namespace BenningSharp.Entity
 {
-    public struct Manufacturer
+    public readonly struct Manufacturer
     {
         public readonly long ID = -1;
         public readonly string? Name = null;
@@ -12,7 +12,7 @@ namespace BenningSharp.Entity
             this.ID = id;
             this.Name = name;
         }
-        internal Manufacturer(SQLiteDataReader dr)
+        public Manufacturer(SQLiteDataReader dr)
         {
             for (int i = 0; i < dr.FieldCount; i++)
             {
