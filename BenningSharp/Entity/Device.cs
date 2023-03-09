@@ -4,6 +4,29 @@ namespace BenningSharp.Entity
 {
     public readonly struct Device
     {
+        public const string COLUMN_INDEX = "Geraete_Index";
+        public const string COLUMN_ID = "Geraete_ID";
+        public const string COLUMN_DESIGNATION = "Geraete_Bezeichnung";
+        public const string COLUMN_SERIAL_NUMBER = "Geraete_SN";
+        public const string COLUMN_TYPE = "Geraete_Typ";
+        public const string COLUMN_MODELL = "Geraete_Modell";
+        public const string COLUMN_REMARK = "Geraete_Bemerkung";
+        public const string COLUMN_DEPARTMENT = "Geraete_Abteilung";
+        public const string COLUMN_MANUFACTURER = "Geraete_Hersteller";
+        public const string COLUMN_RATED_POWER = "Geraete_Nennleistung";
+        public const string COLUMN_CHANGE_DATE = "Aenderungsdatum";
+        public const string COLUMN_INSPECTION_DATE = "Geraete_Pruefdatum";
+        public const string COLUMN_NEXT_INSPECTION_DATE = "Geraete_Datum_Naechste_Pruefung";
+        public const string COLUMN_INSPECTION_INTERVAL = "Geraete_Pruefintervall";
+        public const string COLUMN_VDE = "Geraete_VDE";
+        public const string COLUMN_CLASS = "Geraete_SK";
+        public const string COLUMN_LINE_LENGTH = "Geraete_Leitungslaenge";
+        public const string COLUMN_NUMBER_OF_CONDUCTORS = "Geraete_Anz_Leiter";
+        public const string COLUMN_CONDUCTOR_CROSS_SECTION = "Geraete_Leitungsquerschnitt";
+        public const string COLUMN_OUTPUT_VOLTAGE = "Geraete_U_Ausgang";
+        public const string COLUMN_OUT_OF_ORDER = "AusserBetrieb";
+        public const string COLUMN_PRIVATE_PURCHASE = "Geraete_Private_Anschaffung";
+
         public readonly long Index = 0;
         public readonly string ID = string.Empty;
         public readonly long CustomerIndex = 0;
@@ -34,10 +57,10 @@ namespace BenningSharp.Entity
         public readonly long? AdditionalInspections = null;
         public readonly int? VisualInspections = null;
         public readonly int? ThresholdListID = null;
-        public readonly double? LineLength = null;
-        public readonly double? NumberOfConductors = null;
-        public readonly double? ConductorCrossSection = null;
-        public readonly double? OutputVoltage = null;
+        public readonly double LineLength = 0;
+        public readonly double NumberOfConductors = 0;
+        public readonly double ConductorCrossSection = 0;
+        public readonly double OutputVoltage = 0;
         public readonly string? Building = null;
 
         public readonly int? TimeRPE = null;
@@ -78,22 +101,22 @@ namespace BenningSharp.Entity
                         continue;
                     switch (columnName)
                     {
-                        case "Geraete_Index":
+                        case COLUMN_INDEX:
                             Index = (long)value;
                             break;
-                        case "Geraete_ID":
+                        case COLUMN_ID:
                             ID = (string)value;
                             break;
                         case "Geraete_Kunden_Index":
                             CustomerIndex = (long)value;
                             break;
-                        case "Geraete_Bezeichnung":
+                        case COLUMN_DESIGNATION:
                             Designation = (string)value;
                             break;
-                        case "Geraete_Bemerkung":
+                        case COLUMN_REMARK:
                             Remark = (string)value;
                             break;
-                        case "Geraete_Abteilung":
+                        case COLUMN_DEPARTMENT:
                             Department = (string)value;
                             break;
                         case "departmentId":
@@ -114,22 +137,22 @@ namespace BenningSharp.Entity
                         case "Geraete_Pruefoptionen":
                             InspectionOptions = (int)value;
                             break;
-                        case "Geraete_Pruefdatum":
+                        case COLUMN_INSPECTION_DATE:
                             InspectionDate = (DateTime)value;
                             break;
-                        case "Geraete_Datum_Naechste_Pruefung":
+                        case COLUMN_NEXT_INSPECTION_DATE:
                             NextInspectionDate = (DateTime)value;
                             break;
-                        case "Geraete_Pruefintervall":
+                        case COLUMN_INSPECTION_INTERVAL:
                             InspectionInterval = (int)value;
                             break;
-                        case "Geraete_Nennleistung":
+                        case COLUMN_RATED_POWER:
                             RatedPower = (double)value;
                             break;
-                        case "Geraete_SN":
+                        case COLUMN_SERIAL_NUMBER:
                             SerialNumber = (string)value;
                             break;
-                        case "Geraete_Hersteller":
+                        case COLUMN_MANUFACTURER:
                             Manufacturer = (string)value;
                             break;
                         case "manufacturerId":
@@ -141,13 +164,13 @@ namespace BenningSharp.Entity
                         case "Geraete_Pruefablauf_Customer_Index":
                             InspectionCustomer = (long)value;
                             break;
-                        case "Aenderungsdatum":
+                        case COLUMN_CHANGE_DATE:
                             ChangeDate = (DateTime)value;
                             break;
-                        case "Geraete_VDE":
+                        case COLUMN_VDE:
                             VDE = (int)value;
                             break;
-                        case "Geraete_SK":
+                        case COLUMN_CLASS:
                             Class = (int)value;
                             break;
                         case "Geraete_Fragen":
@@ -162,16 +185,16 @@ namespace BenningSharp.Entity
                         case "ThresholdListID":
                             ThresholdListID = (int)value;
                             break;
-                        case "Geraete_Leitungslaenge":
+                        case COLUMN_LINE_LENGTH:
                             LineLength = (double)value;
                             break;
-                        case "Geraete_Anz_Leiter":
+                        case COLUMN_NUMBER_OF_CONDUCTORS:
                             NumberOfConductors = (double)value;
                             break;
-                        case "Geraete_Leitungsquerschnitt":
+                        case COLUMN_CONDUCTOR_CROSS_SECTION:
                             ConductorCrossSection = (double)value;
                             break;
-                        case "Geraete_U_Ausgang":
+                        case COLUMN_OUTPUT_VOLTAGE:
                             OutputVoltage = (double)value;
                             break;
                         case "Gebaeude":
@@ -213,16 +236,16 @@ namespace BenningSharp.Entity
                         case "Geraete_Zeit_umpolung":
                             TimeReversePolarity = (int)value;
                             break;
-                        case "AusserBetrieb":
+                        case COLUMN_OUT_OF_ORDER:
                             OutOfOrder = (bool)value;
                             break;
-                        case "Geraete_Typ":
+                        case COLUMN_TYPE:
                             Type = (string)value;
                             break;
-                        case "Geraete_Modell":
+                        case COLUMN_MODELL:
                             Modell = (string)value;
                             break;
-                        case "Geraete_Private_Anschaffung":
+                        case COLUMN_PRIVATE_PURCHASE:
                             PrivatePurchase = (bool)value;
                             break;
                         case "Geraete_Vorlagen_ID":

@@ -43,7 +43,7 @@ namespace BenningSharp.Objects
 
         public override string ToString()
         {
-            return $"ID: {ID} Date: {Date} Device ID: {Device.ID} Device SN: {Device.SerialNumber} Device Name: {Device.Name}";
+            return $"ID: {ID} Date: {Date} Device ID: {Device.ID} Device SN: {Device.SerialNumber} Device Name: {Device.Designation}";
         }
     }
 }
