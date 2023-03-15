@@ -1,11 +1,9 @@
-﻿using System.Data.SQLite;
-
-namespace BenningSharp.Entity
+﻿namespace BenningSharp.Entity
 {
     public readonly struct KeyValueData
     {
-        public readonly string Key = null;
-        public readonly object? Value = null;
+        public readonly string Key;
+        public readonly object? Value;
 
         public readonly EInspectionMajor InspectionMajorKey = EInspectionMajor.UNKNOWN;
         public readonly EInspectionMiddle InspectionMiddleKey = EInspectionMiddle.UNKNOWN;

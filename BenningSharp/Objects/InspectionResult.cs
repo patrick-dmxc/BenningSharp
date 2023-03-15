@@ -1,4 +1,8 @@
-﻿using System.Xml.Linq;
+﻿using BenningSharp.Entity;
+using BenningSharp.Manager;
+using BenningSharp.Objects.Inspections;
+using System.Collections.ObjectModel;
+using System.Xml.Linq;
 
 namespace BenningSharp.Objects
 {
@@ -6,6 +10,15 @@ namespace BenningSharp.Objects
     {
         private readonly Database Database;
         private readonly Entity.InspectionResult Entity;
+
+        private List<IInspection> inspections= new List<IInspection>();
+        public IReadOnlyCollection<IInspection> Inspections
+        {
+            get
+            {
+                return inspections.AsReadOnly();
+            }
+        }
 
         public readonly long ID;
         public readonly long DeviceIndex;
@@ -30,15 +43,35 @@ namespace BenningSharp.Objects
             }
         }
 
+        public IReadOnlyDictionary<string, KeyValueData> Data
+        {
+            get
+            {
+                return this.Entity.Data;
+            }
+        }
+
         public InspectionResult(Database database, Entity.InspectionResult entity) 
         {
             this.Database = database;
             this.Entity = entity;
             this.ID = entity.ID;
             this.DeviceIndex = entity.DeviceIndex;
+
+
         }
         internal void initialize()
         {
+            var allInspectionTemplates = InspectionsManager.Instance.Inspections;
+            foreach (var template in allInspectionTemplates)
+            {
+                if (this.Data.Any(d => d.Value.InspectionMajorKey == template.Type))
+                {
+                    IInspection? instance = Activator.CreateInstance(template.GetType(), this) as IInspection;
+                    if(instance!=null)
+                        this.inspections.Add(instance);
+                }
+            }
         }
 
         public override string ToString()

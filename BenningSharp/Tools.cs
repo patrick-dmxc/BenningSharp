@@ -305,5 +305,79 @@
             }
             return EValueType.UNKNOWN;
         }
+
+        public static string FormatToText(this double value, string unit)
+        {
+            int mil = 0;
+            if (value != 0)
+                do
+                {
+                    if (value < 1)
+                    {
+                        value *= 1000;
+                        mil--;
+                    }
+                    else if (value > 1000)
+                    {
+                        value /= 1000;
+                        mil++;
+                    }
+                    else
+                        break;
+
+                    if (Math.Abs(mil) >= 5)
+                        break;
+                } while (true);
+
+            string valText = value.ToString("0.##");
+            string valUnit = unit;
+            switch (mil)
+            {
+                case -5:
+                    valUnit = $"f{unit}";
+                    break;
+                case -4:
+                    valUnit = $"p{unit}";
+                    break;
+                case -3:
+                    valUnit = $"n{unit}";
+                    break;
+                case -2:
+                    valUnit = $"μ{unit}";
+                    break;
+                case -1:
+                    valUnit = $"m{unit}";
+                    break;
+                case 0:
+                    break;
+                case 1:
+                    valUnit = $"k{unit}";
+                    break;
+                case 2:
+                    valUnit = $"M{unit}";
+                    break;
+                case 3:
+                    valUnit = $"G{unit}";
+                    break;
+                case 4:
+                    valUnit = $"T{unit}";
+                    break;
+                case 5:
+                    valUnit = $"P{unit}";
+                    break;
+            }
+            return $"{valText} {valUnit}";
+        }
+        public static IEnumerable<Type> GetAssemblies<T>()
+        {
+            return GetAssemblies(typeof(T));
+        }
+        public static IEnumerable<Type> GetAssemblies(this Type type)
+        {
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => p.GetInterfaces().Any(i=>i ==type)&& !p.IsAbstract);
+            return types;
+        }
     }
 }
