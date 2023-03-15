@@ -94,15 +94,15 @@ namespace BenningSharp.Objects.Inspections
                 }
             }
             if (u_Limit_Prim_PE > 0)
-                this.AddReading(new RInsu_1(new Value(u, "V"), new Value(u_Limit_Prim_PE, "V"), new Value(i, "A"), new Value(r, "Ω"), new Value(r_Peak_Prim_PE, "Ω"), new Value(r_Limit_Prim_PE, "Ω")));
+                this.AddReading(new RInsu_1(new Value(u, "V"), new Value(u_Limit_Prim_PE, "V"), new Value(i, "A"), new Value(r * 1000000, "Ω"), new Value(r_Peak_Prim_PE*1000000, "Ω"), new Value(r_Limit_Prim_PE * 1000000, "Ω")));
             if (u_Limit_Sec_PE > 0)
-                this.AddReading(new RInsu_2(new Value(u, "V"), new Value(u_Limit_Sec_PE, "V"), new Value(i, "A"), new Value(r, "Ω"), new Value(r_Peak_Sec_PE, "Ω"), new Value(r_Limit_Sec_PE, "Ω")));
+                this.AddReading(new RInsu_2(new Value(u, "V"), new Value(u_Limit_Sec_PE, "V"), new Value(i, "A"), new Value(r * 1000000, "Ω"), new Value(r_Peak_Sec_PE * 1000000, "Ω"), new Value(r_Limit_Sec_PE * 1000000, "Ω")));
             if (u_Limit_Prim_Sec > 0)
-                this.AddReading(new RInsu_3(new Value(u, "V"), new Value(u_Limit_Prim_Sec, "V"), new Value(i, "A"), new Value(r, "Ω"), new Value(r_Peak_Prim_Sec, "Ω"), new Value(r_Limit_Prim_Sec, "Ω")));
+                this.AddReading(new RInsu_3(new Value(u, "V"), new Value(u_Limit_Prim_Sec, "V"), new Value(i, "A"), new Value(r * 1000000, "Ω"), new Value(r_Peak_Prim_Sec * 1000000, "Ω"), new Value(r_Limit_Prim_Sec * 1000000, "Ω")));
             if (r_Limit_Welding_Prim_Welding != 0
                 || r_Limit_Welding_Prim_Housing != 0
                 || r_Limit_Welding_Welding_Housing != 0)
-                this.AddReading(new RInsu_4(new Value(u, "V"), new Value(u_Limit_Prim_PE, "V"), new Value(i, "A"), new Value(r, "Ω"), new Value(r_Peak_Prim_Sec, "Ω"), new Value(r_Limit_Prim_Sec, "Ω")));
+                this.AddReading(new RInsu_4(new Value(u, "V"), new Value(u_Limit_Prim_PE, "V"), new Value(i, "A"), new Value(r * 1000000, "Ω"), new Value(r_Peak_Prim_Sec * 1000000, "Ω"), new Value(r_Limit_Prim_Sec * 1000000, "Ω")));
         }
 
         public abstract class RInsu : AbstractReadingResistance
