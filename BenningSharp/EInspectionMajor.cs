@@ -29,13 +29,10 @@ namespace BenningSharp
         ICont,
         [Display(Name = "Ua", Description = "Safety extra-low voltage")]
         Ua,
-        [Display(Description = "Supplied mains")]
-        SupICont,
         [Display(Name = "Funct.", Description = "Functional test")]
         Funct,
         [Display(Description = "Protective Extra Low Voltage")]
         PELV,
-        [Display(Name = "Cable", Description = "Cable continuity test")]
         RCD,
         [Display(Name = "Cable", Description = "Cable continuity test")]
         Cable,

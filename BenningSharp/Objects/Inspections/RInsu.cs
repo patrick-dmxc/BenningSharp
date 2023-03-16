@@ -1,14 +1,15 @@
 ﻿using BenningSharp.Entity;
 using BenningSharp.Objects.Inspections.Reading;
+using BenningSharp.Objects.Inspections.Reading.RInsulation;
 
 namespace BenningSharp.Objects.Inspections
 {
-    public class RInsu1 : AbstractInspections
+    public class RInsu : AbstractInspections
     {
         public override string Name => "RInsu. LN-PE";
         public override EInspectionMajor Type => EInspectionMajor.RInsu;
-        public RInsu1() : base(true) { }
-        public RInsu1(InspectionResult inspectionResult) : base(inspectionResult)
+        public RInsu() : base(true) { }
+        public RInsu(InspectionResult inspectionResult) : base(inspectionResult)
         {
         }
 
@@ -103,60 +104,6 @@ namespace BenningSharp.Objects.Inspections
                 || r_Limit_Welding_Prim_Housing != 0
                 || r_Limit_Welding_Welding_Housing != 0)
                 this.AddReading(new RInsu_4(new Value(u, "V"), new Value(u_Limit_Prim_PE, "V"), new Value(i, "A"), new Value(r * 1000000, "Ω"), new Value(r_Peak_Prim_Sec * 1000000, "Ω"), new Value(r_Limit_Prim_Sec * 1000000, "Ω")));
-        }
-
-        public abstract class RInsu : AbstractReadingResistance
-        {
-            public override string Name => "RInsu LN-PE";
-            public Value ULimit { get; private set; }
-
-            public sealed override string LimitText => $"< {RLimit}";
-            public override string MeasuringMethodText => "RInsu. 1";
-
-            public RInsu(Value u, Value uLimit, Value i, Value r, Value rPeak, Value rLimit) : base(u, i, r, rPeak, rLimit)
-            {
-                ULimit = uLimit;
-            }
-        }
-
-        public sealed class RInsu_1 : RInsu
-        {
-            public override string Name => "RInsu LN-PE";
-            public override string MeasuringMethodText => "RInsu. 1";
-
-            public RInsu_1(Value u, Value uLimit, Value i, Value r, Value rPeak, Value rLimit) : base(u,uLimit,i,r,rPeak,rLimit)
-            {
-            }
-        }
-
-        public sealed class RInsu_2 : RInsu
-        {
-            public override string Name => "RInsu Sec-PE";
-            public override string MeasuringMethodText => "RInsu. 2";
-
-            public RInsu_2(Value u, Value uLimit, Value i, Value r, Value rPeak, Value rLimit) : base(u, uLimit, i, r, rPeak, rLimit)
-            {
-            }
-        }
-
-        public sealed class RInsu_3 : RInsu
-        {
-            public override string Name => "RInsu LN-Sec";
-            public override string MeasuringMethodText => "RInsu. 3";
-
-            public RInsu_3(Value u, Value uLimit, Value i, Value r, Value rPeak, Value rLimit) : base(u, uLimit, i, r, rPeak, rLimit)
-            {
-            }
-        }
-
-        public sealed class RInsu_4 : RInsu
-        {
-            public override string Name => "RInsu Welding";
-            public override string MeasuringMethodText => "RInsu. 4";
-
-            public RInsu_4(Value u, Value uLimit, Value i, Value r, Value rPeak, Value rLimit) : base(u, uLimit, i, r, rPeak, rLimit)
-            {
-            }
         }
     }
 }

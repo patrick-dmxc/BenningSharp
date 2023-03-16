@@ -1,5 +1,6 @@
 ﻿using BenningSharp.Entity;
 using BenningSharp.Objects.Inspections.Reading;
+using BenningSharp.Objects.Inspections.Reading.RPE;
 
 namespace BenningSharp.Objects.Inspections
 {
@@ -54,29 +55,7 @@ namespace BenningSharp.Objects.Inspections
                         break;
                 }
             }
-            this.AddReading(new RPE_(new Value(u, "V"), new Value(i, "A"), new Value(r, "Ω"), new Value(rPeak, "Ω"), new Value(rLimit, "Ω"), new Value(lineLength, "m"), measuringPoints));
-        }
-        public sealed class RPE_ : AbstractReadingResistance
-        {
-            public override string Name => "RPE";
-            public override string LimitText => $"< {RLimit}";
-            public override string MeasuringMethodText
-            {
-                get
-                {
-
-                    if (I < 3)
-                        return "RPE 600mA";
-                    if (I >= 10)
-                        return "RPE 10A";
-                    else
-                        return base.MeasuringMethodText;
-                }
-            }
-
-            public RPE_(Value u, Value i, Value r, Value rPeak, Value rLimit, Value lineLength, int measuringPoints) : base(u, i, r, rPeak, rLimit)
-            {
-            }
+            this.AddReading(new Reading.RPE.RPE(new Value(u, "V"), new Value(i, "A"), new Value(r, "Ω"), new Value(rPeak, "Ω"), new Value(rLimit, "Ω"), new Value(lineLength, "m"), measuringPoints));
         }
     }
 }

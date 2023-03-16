@@ -23,7 +23,8 @@ namespace BenningSharp.Objects.Inspections.Reading
         public sealed override string ToString()
         {
             string passed = Passed ? "Passed" : "Failed";
-            return $"{Name}: {ReadingText} {LimitText} M: {MeasuringMethodText} {passed}";
+            string measeringMethodeText = string.IsNullOrWhiteSpace(MeasuringMethodText) ? string.Empty : $"M: {MeasuringMethodText} ";
+            return $"{Name}: {ReadingText} {LimitText} {measeringMethodeText}{passed}";
         }
     }
 }

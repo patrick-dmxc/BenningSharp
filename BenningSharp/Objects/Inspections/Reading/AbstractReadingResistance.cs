@@ -10,11 +10,8 @@ namespace BenningSharp.Objects.Inspections.Reading
         public Value RPeak { get; private set; }
         public Value RLimit { get; private set; }
 
-        public Value LineLength { get; private set; }
-        public int MeasuringPoints { get; private set; }
-
         public sealed override string ReadingText => RPeak.ToString();
-        public AbstractReadingResistance(Value u, Value i, Value r, Value rPeak, Value rLimit) : base(rPeak >= rLimit, rPeak, rLimit)
+        public AbstractReadingResistance(Value u, Value i, Value r, Value rPeak, Value rLimit, bool passed) : base(passed, rPeak, rLimit)
         {
             U = u;
             I = i;

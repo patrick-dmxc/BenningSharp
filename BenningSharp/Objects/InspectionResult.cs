@@ -1,8 +1,7 @@
 ﻿using BenningSharp.Entity;
 using BenningSharp.Manager;
 using BenningSharp.Objects.Inspections;
-using System.Collections.ObjectModel;
-using System.Xml.Linq;
+using BenningSharp.Objects.Inspections.Reading;
 
 namespace BenningSharp.Objects
 {
@@ -17,6 +16,21 @@ namespace BenningSharp.Objects
             get
             {
                 return inspections.AsReadOnly();
+            }
+        }
+        public IReadOnlyCollection<IReading> Readings
+        {
+            get
+            {
+                try
+                {
+                    return inspections.SelectMany(i => i.Readings).ToList().AsReadOnly();
+                }
+                catch(Exception e)
+                {
+
+                }
+                return null;
             }
         }
 
@@ -72,6 +86,7 @@ namespace BenningSharp.Objects
                         this.inspections.Add(instance);
                 }
             }
+            var r=this.Readings.ToArray();
         }
 
         public override string ToString()

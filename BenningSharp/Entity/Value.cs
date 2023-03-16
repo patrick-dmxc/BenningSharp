@@ -1,4 +1,6 @@
-﻿namespace BenningSharp.Entity
+﻿using System.Runtime.CompilerServices;
+
+namespace BenningSharp.Entity
 {
     public struct Value
     {
@@ -20,6 +22,11 @@
         public override string ToString()
         {
             return Formated;
+        }
+        public static Value Max(Value value1, params Value[] values)
+        {
+            double arrayMax = Math.Max(value1.Double, values.Where(v=>string.Equals(value1.Unit,v.Unit)).Max(v => v.Double));
+            return new Value(arrayMax, value1.Unit);
         }
     }
 }

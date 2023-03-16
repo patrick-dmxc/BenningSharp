@@ -73,7 +73,7 @@
             if (key.Contains("_status"))
                 return EInspectionMiddle.Status;
             if (key.Contains("_uvers"))
-                return EInspectionMiddle.Conductor;
+                return EInspectionMiddle.U_Supplied;
             if (key.Contains("_u_ber"))
                 return EInspectionMiddle.U_Contact;
             if (key.Contains("_r_leit"))

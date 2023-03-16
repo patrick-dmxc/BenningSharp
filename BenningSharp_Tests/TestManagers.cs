@@ -21,7 +21,7 @@ namespace BenningSharp_Tests
             InspectionsManager manager = InspectionsManager.Instance;
             Assert.That(manager, Is.Not.Null);
             Assert.That(manager.IsInitializing, Is.True);
-            Assert.That(manager.Inspections.Count, Is.EqualTo(3));
+            Assert.That(manager.Inspections.Count, Is.EqualTo(5));
         }
     }
 }
