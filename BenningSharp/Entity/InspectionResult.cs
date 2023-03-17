@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 
 namespace BenningSharp.Entity
 {

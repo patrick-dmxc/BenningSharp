@@ -1,9 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.Metrics;
-using System.Xml.Linq;
-
-namespace BenningSharp
+﻿namespace BenningSharp
 {
     public enum EInspectionMiddle
     {

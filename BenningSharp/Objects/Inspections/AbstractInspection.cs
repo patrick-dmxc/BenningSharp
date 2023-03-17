@@ -1,5 +1,4 @@
 ﻿using BenningSharp.Objects.Inspections.Reading;
-using System.Collections.ObjectModel;
 
 namespace BenningSharp.Objects.Inspections
 {

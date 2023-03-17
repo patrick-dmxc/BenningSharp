@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace BenningSharp.Entity
+﻿namespace BenningSharp.Entity
 {
     public struct Value
     {

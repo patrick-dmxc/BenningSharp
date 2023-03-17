@@ -1,4 +1,5 @@
 using BenningSharp;
+using BenningSharp.Manager;
 
 namespace BenningSharp_Tests
 {
@@ -9,7 +10,7 @@ namespace BenningSharp_Tests
         [SetUp]
         public void Setup()
         {
-            database = new Database(DB_PATH);
+            database = DatabaseManager.Instance.OpenDatabase(DB_PATH);
         }
         [Test]
         public async Task ID()

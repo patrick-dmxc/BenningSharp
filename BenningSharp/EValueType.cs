@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace BenningSharp
+﻿namespace BenningSharp
 {
     public enum EValueType
     {

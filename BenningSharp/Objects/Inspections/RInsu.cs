@@ -1,5 +1,4 @@
 ﻿using BenningSharp.Entity;
-using BenningSharp.Objects.Inspections.Reading;
 using BenningSharp.Objects.Inspections.Reading.RInsulation;
 
 namespace BenningSharp.Objects.Inspections

@@ -51,7 +51,7 @@ namespace BenningSharp
             }
         }
 
-        public Database(string path)
+        internal Database(string path)
         {
             this.Path = path;
             _ = this.initialize();

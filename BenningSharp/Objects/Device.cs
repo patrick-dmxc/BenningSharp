@@ -1,7 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
-using DeviceEntity = BenningSharp.Entity.Device;
+﻿using DeviceEntity = BenningSharp.Entity.Device;
 
 namespace BenningSharp.Objects
 {

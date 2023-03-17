@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
-
-namespace BenningSharp
+﻿namespace BenningSharp
 {
     public enum EInspectionMajor
     {
