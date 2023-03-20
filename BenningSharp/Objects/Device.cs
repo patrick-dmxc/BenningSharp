@@ -172,6 +172,23 @@ namespace BenningSharp.Objects
             }
         }
 
+        private double? outputVoltage = null;
+        public double OutputVoltage
+        {
+            get
+            {
+                return this.outputVoltage ?? this.Entity.OutputVoltage;
+            }
+            set
+            {
+                if (double.Equals(this.outputVoltage, value))
+                    return;
+
+                this.outputVoltage = value;
+                this.setDirty();
+            }
+        }
+
         private double? conductorCrossSection = null;
         public double ConductorCrossSection
         {
@@ -202,6 +219,40 @@ namespace BenningSharp.Objects
                     return;
 
                 this.ratedPower = value;
+                this.setDirty();
+            }
+        }
+
+        private byte? _class = null;
+        public byte Class
+        {
+            get
+            {
+                return this._class ?? (byte?)this.Entity.Class ?? 1;
+            }
+            set
+            {
+                if (double.Equals(this._class, value))
+                    return;
+
+                this._class = value;
+                this.setDirty();
+            }
+        }
+
+        private byte? numberOfConductors = null;
+        public byte NumberOfConductors
+        {
+            get
+            {
+                return this.numberOfConductors ?? ((byte?)this.Entity.NumberOfConductors) ?? 3;
+            }
+            set
+            {
+                if (double.Equals(this.numberOfConductors, value))
+                    return;
+
+                this.numberOfConductors = value;
                 this.setDirty();
             }
         }
@@ -321,11 +372,20 @@ namespace BenningSharp.Objects
                     case nameof(this.LineLength):
                         await this.Database.SetValue(Database.TABLE_DEVICES, DeviceEntity.COLUMN_LINE_LENGTH, DeviceEntity.COLUMN_INDEX, this.Index, this.LineLength);
                         break;
+                    case nameof(this.OutputVoltage):
+                        await this.Database.SetValue(Database.TABLE_DEVICES, DeviceEntity.COLUMN_OUTPUT_VOLTAGE, DeviceEntity.COLUMN_INDEX, this.Index, this.OutputVoltage);
+                        break;
                     case nameof(this.ConductorCrossSection):
                         await this.Database.SetValue(Database.TABLE_DEVICES, DeviceEntity.COLUMN_CONDUCTOR_CROSS_SECTION, DeviceEntity.COLUMN_INDEX, this.Index, this.ConductorCrossSection);
                         break;
                     case nameof(this.RatedPower):
                         await this.Database.SetValue(Database.TABLE_DEVICES, DeviceEntity.COLUMN_RATED_POWER, DeviceEntity.COLUMN_INDEX, this.Index, this.RatedPower);
+                        break;
+                    case nameof(this.Class):
+                        await this.Database.SetValue(Database.TABLE_DEVICES, DeviceEntity.COLUMN_CLASS, DeviceEntity.COLUMN_INDEX, this.Index, (int)this.Class);
+                        break;
+                    case nameof(this.NumberOfConductors):
+                        await this.Database.SetValue(Database.TABLE_DEVICES, DeviceEntity.COLUMN_NUMBER_OF_CONDUCTORS, DeviceEntity.COLUMN_INDEX, this.Index, this.NumberOfConductors);
                         break;
                     case nameof(this.InspectionInterval):
                         await this.Database.SetValue(Database.TABLE_DEVICES, DeviceEntity.COLUMN_INSPECTION_INTERVAL, DeviceEntity.COLUMN_INDEX, this.Index, this.InspectionInterval);

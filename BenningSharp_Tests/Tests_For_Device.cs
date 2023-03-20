@@ -6,11 +6,11 @@ namespace BenningSharp_Tests
     public class Tests_For_Device
     {
         private static string DB_PATH = "C:\\Users\\Patrick\\Desktop\\LAV2022.db";
-        private Database? database=null;
+        private Database? database = null;
         [SetUp]
         public void Setup()
         {
-            database = DatabaseManager.Instance.OpenDatabase(DB_PATH);
+            database = DatabaseManager.Instance.OpenOrGetDatabase(DB_PATH);
         }
         [Test]
         public async Task ID()
@@ -220,6 +220,29 @@ namespace BenningSharp_Tests
             Assert.Pass();
         }
         [Test]
+        public async Task OutputVoltage()
+        {
+            var device = database?.Devices.First()!;
+            var backupOutputVoltage = device.OutputVoltage;
+            Assert.That(device.Dirty, Is.False);
+
+            device.OutputVoltage = 2;
+            Assert.That(device.OutputVoltage, Is.EqualTo(2));
+            Assert.That(device.Dirty, Is.True);
+
+            await device.Save();
+            Assert.That(device.Dirty, Is.False);
+
+            device.OutputVoltage = backupOutputVoltage;
+            Assert.That(device.Dirty, Is.True);
+            Assert.That(device.OutputVoltage, Is.EqualTo(backupOutputVoltage));
+
+            await device.Save();
+            Assert.That(device.Dirty, Is.False);
+
+            Assert.Pass();
+        }
+        [Test]
         public async Task ConductorCrossSection()
         {
             var device = database?.Devices.First()!;
@@ -259,6 +282,52 @@ namespace BenningSharp_Tests
             device.RatedPower = backupRatedPower;
             Assert.That(device.Dirty, Is.True);
             Assert.That(device.RatedPower, Is.EqualTo(backupRatedPower));
+
+            await device.Save();
+            Assert.That(device.Dirty, Is.False);
+
+            Assert.Pass();
+        }
+        [Test]
+        public async Task Class()
+        {
+            var device = database?.Devices.First()!;
+            var backupClass = device.Class;
+            Assert.That(device.Dirty, Is.False);
+
+            device.Class = 1;
+            Assert.That(device.Class, Is.EqualTo(1));
+            Assert.That(device.Dirty, Is.True);
+
+            await device.Save();
+            Assert.That(device.Dirty, Is.False);
+
+            device.Class = backupClass;
+            Assert.That(device.Dirty, Is.True);
+            Assert.That(device.Class, Is.EqualTo(backupClass));
+
+            await device.Save();
+            Assert.That(device.Dirty, Is.False);
+
+            Assert.Pass();
+        }
+        [Test]
+        public async Task NumberOfConductors()
+        {
+            var device = database?.Devices.First()!;
+            var backupNumberOfConductors = device.NumberOfConductors;
+            Assert.That(device.Dirty, Is.False);
+
+            device.NumberOfConductors = 2;
+            Assert.That(device.NumberOfConductors, Is.EqualTo(2));
+            Assert.That(device.Dirty, Is.True);
+
+            await device.Save();
+            Assert.That(device.Dirty, Is.False);
+
+            device.NumberOfConductors = backupNumberOfConductors;
+            Assert.That(device.Dirty, Is.True);
+            Assert.That(device.NumberOfConductors, Is.EqualTo(backupNumberOfConductors));
 
             await device.Save();
             Assert.That(device.Dirty, Is.False);

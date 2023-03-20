@@ -16,6 +16,9 @@
 
         private List<Database> databases = new List<Database>();
         public IReadOnlyCollection<Database> Databases { get { return databases.AsReadOnly(); } }
+
+        public event EventHandler<DatabaseEventArgs>? DatabaseAdded;
+        public event EventHandler<DatabaseEventArgs>? DatabaseRemoved;
         protected DatabaseManager() : base()
         {
 
@@ -29,14 +32,34 @@
         {
         }
 
-        public Database OpenDatabase(string path)
+        public Database OpenOrGetDatabase(string path)
         {
-            if (this.databases.Any(d => string.Equals(d.Path, path)))
-                throw new Exception($"There is already a Database with the path: {path}");
+            Database? database = this.databases.FirstOrDefault(d => string.Equals(d.Path, path));
+            if (database != null)
+                return database;
 
-            var database = new Database(path);
+            database = new Database(path);
             this.databases.Add(database);
+            this.DatabaseAdded?.Invoke(this, new DatabaseEventArgs(database));
             return database;
+        }
+        public bool RemoveDatabase(Database database)
+        {
+            if (!this.databases.Contains(database))
+                return false;
+
+            this.databases.Remove(database);
+            this.DatabaseRemoved?.Invoke(this, new DatabaseEventArgs(database));
+            return true;
+        }
+
+        public class DatabaseEventArgs: EventArgs
+        {
+            public readonly Database Database;
+            public DatabaseEventArgs(Database database)
+            {
+                Database = database;
+            }
         }
     }
 }
