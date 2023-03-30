@@ -18,7 +18,7 @@ namespace BenningSharp.Objects
                 return inspections.AsReadOnly();
             }
         }
-        public IReadOnlyCollection<IReading> Readings
+        public IReadOnlyCollection<IReading>? Readings
         {
             get
             {
@@ -44,6 +44,48 @@ namespace BenningSharp.Objects
                 return this.Entity.Date;
             }
         }
+        public string? ExaminerName
+        {
+            get
+            {
+                return this.Entity.ExaminerName;
+            }
+        }
+        public string? MeasuringDevice
+        {
+            get
+            {
+                return this.Entity.MeasuringDevice;
+            }
+        }
+        public string? Remark
+        {
+            get
+            {
+                return this.Entity.Remark;
+            }
+        }
+        public string? SN_MeasuringInstrument
+        {
+            get
+            {
+                return this.Entity.SN_MeasuringInstrument;
+            }
+        }
+        public string? SW_MeasuringInstrument
+        {
+            get
+            {
+                return this.Entity.SW_MeasuringInstrument;
+            }
+        }
+        public string? SW_GUI
+        {
+            get
+            {
+                return this.Entity.SW_GUI;
+            }
+        }
 
         private Device? device;
         public Device Device
@@ -62,6 +104,14 @@ namespace BenningSharp.Objects
             get
             {
                 return this.Entity.Data;
+            }
+        }
+
+        public bool Passed
+        {
+            get
+            {
+                return this.inspections.All(i=>i.Passed);
             }
         }
 
@@ -86,7 +136,6 @@ namespace BenningSharp.Objects
                         this.inspections.Add(instance);
                 }
             }
-            var r=this.Readings.ToArray();
         }
 
         public override string ToString()
